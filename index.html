@@ -141,7 +141,10 @@
   </footer>
 
   <script>
-    const RUNS = [
+    const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQc1oxaX2MVIhfqI3IGloblAncj0hoDgE5ur-dMVdsoMNvgJCQ1ibPkmXMItLlMH1gZb_3tXHvaDHl6/pub?gid=0&single=true&output=csv';
+
+    // Used only if the live CSV fails to load or parse.
+    const FALLBACK_RUNS = [
       { date: '2026-08-19', time: '6:00 PM', title: 'Evening Shakeout', location: '@ lululemon 2nd & PCH', halfBuild: false },
       { date: '2026-08-21', time: '6:45 AM', title: 'Fast Fridays', location: 'Chittick Track', halfBuild: false },
       { date: '2026-08-23', time: '8:00 AM', title: 'LB Half Training Run #2', location: '@ Ubuntu with Movement Chiropractic', halfBuild: true },
@@ -169,9 +172,101 @@
       return dt;
     }
 
-    function renderSchedule() {
+    // Minimal RFC4180-style CSV parser: handles quoted fields, commas and
+    // escaped quotes ("") inside quotes, and both \n and \r\n line endings.
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+
+        if (inQuotes) {
+          if (char === '"') {
+            if (text[i + 1] === '"') {
+              field += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            field += char;
+          }
+          continue;
+        }
+
+        if (char === '"') {
+          inQuotes = true;
+        } else if (char === ',') {
+          row.push(field);
+          field = '';
+        } else if (char === '\r') {
+          // skip, \n (or end of text) closes the row
+        } else if (char === '\n') {
+          row.push(field);
+          rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += char;
+        }
+      }
+
+      if (field !== '' || row.length) {
+        row.push(field);
+        rows.push(row);
+      }
+
+      return rows.filter(r => r.some(v => v.trim() !== ''));
+    }
+
+    function csvRowsToRuns(rows) {
+      if (!rows.length) return [];
+
+      const header = rows[0].map(h => h.trim().toLowerCase());
+      const col = name => header.indexOf(name);
+      const dateCol = col('date');
+      const timeCol = col('time');
+      const titleCol = col('title');
+      const locationCol = col('location');
+      const noteCol = col('note');
+      const halfBuildCol = col('halfbuild');
+
+      return rows.slice(1)
+        .map(r => {
+          const note = noteCol >= 0 ? (r[noteCol] || '').trim() : '';
+          const run = {
+            date: (r[dateCol] || '').trim(),
+            time: (r[timeCol] || '').trim(),
+            title: (r[titleCol] || '').trim(),
+            location: (r[locationCol] || '').trim(),
+            halfBuild: halfBuildCol >= 0 && (r[halfBuildCol] || '').trim().toUpperCase() === 'TRUE',
+          };
+          if (note) run.note = note;
+          return run;
+        })
+        .filter(run => run.date && run.time && run.title && run.location);
+    }
+
+    async function loadRuns() {
+      try {
+        const response = await fetch(SCHEDULE_CSV_URL);
+        if (!response.ok) throw new Error(`CSV fetch failed: ${response.status}`);
+        const runs = csvRowsToRuns(parseCSV(await response.text()));
+        if (!runs.length) throw new Error('CSV parsed to zero valid runs');
+        return runs;
+      } catch (err) {
+        console.warn('Falling back to hardcoded schedule:', err);
+        return FALLBACK_RUNS;
+      }
+    }
+
+    function renderSchedule(runs) {
       const runlist = document.getElementById('runlist');
-      RUNS.forEach(run => {
+      runlist.innerHTML = '';
+      runs.forEach(run => {
         const dt = parseRunDate(run);
 
         const card = document.createElement('div');
@@ -219,9 +314,9 @@
       });
     }
 
-    function renderNextRun() {
+    function renderNextRun(runs) {
       const now = new Date();
-      const upcoming = RUNS
+      const upcoming = runs
         .map(run => ({ run, dt: parseRunDateTime(run) }))
         .filter(({ dt }) => dt >= now)
         .sort((a, b) => a.dt - b.dt)[0];
@@ -238,8 +333,10 @@
         `${WEEKDAYS[dt.getDay()]}, ${MONTHS[dt.getMonth()]} ${dt.getDate()} · ${run.time} · ${run.location}`;
     }
 
-    renderSchedule();
-    renderNextRun();
+    loadRuns().then(runs => {
+      renderSchedule(runs);
+      renderNextRun(runs);
+    });
   </script>
 
 </body>
