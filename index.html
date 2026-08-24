@@ -84,6 +84,33 @@
   .run-note{color:#a29aad;font-size:.82rem;font-style:italic;margin-top:2px;}
   .tag{display:inline-block;background:var(--coral);color:var(--white);font-family:'Anton',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:20px;margin-top:8px;}
 
+  /* RSVP */
+  .rsvp-btn{display:inline-block;background:var(--sky-deep);color:var(--white);font-family:'Anton',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:7px 16px;border-radius:20px;margin-top:10px;margin-right:6px;border:none;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;box-shadow:0 4px 10px rgba(63,184,198,.35);}
+  .rsvp-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(63,184,198,.45);}
+
+  .rsvp-overlay{position:fixed;inset:0;background:rgba(42,36,56,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s ease;}
+  .rsvp-overlay.active{opacity:1;pointer-events:auto;}
+  .rsvp-modal{background:var(--white);border-radius:20px;padding:26px 24px;max-width:380px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25);position:relative;transform:translateY(10px);transition:transform .2s ease;}
+  .rsvp-overlay.active .rsvp-modal{transform:translateY(0);}
+  .rsvp-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:1.4rem;line-height:1;color:var(--ink);opacity:.45;cursor:pointer;padding:4px;}
+  .rsvp-close:hover{opacity:1;}
+  .rsvp-modal h3{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.3rem;color:var(--ink);padding-right:24px;line-height:1.1;}
+  .rsvp-sub{color:#6a6478;font-size:.88rem;font-weight:500;margin-top:6px;margin-bottom:18px;}
+  .rsvp-field{margin-bottom:12px;}
+  .rsvp-field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:4px;color:var(--ink);}
+  .rsvp-field input{width:100%;padding:10px 12px;border-radius:10px;border:2px solid #f5e3e8;font-family:inherit;font-size:.95rem;background:#fff9fb;color:var(--ink);}
+  .rsvp-field input:focus{outline:none;border-color:var(--pink-deep);}
+  .rsvp-submit{width:100%;background:var(--coral);color:var(--white);font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:.04em;font-size:.95rem;padding:13px;border:none;border-radius:14px;cursor:pointer;margin-top:4px;transition:transform .15s ease, box-shadow .15s ease;box-shadow:0 6px 14px rgba(245,51,63,.3);}
+  .rsvp-submit:hover{transform:translateY(-1px);}
+  .rsvp-submit:disabled{opacity:.6;cursor:default;transform:none;}
+  .rsvp-cancel{display:block;width:100%;text-align:center;margin-top:10px;background:none;border:none;color:#a29aad;font-weight:700;font-size:.85rem;cursor:pointer;}
+  .rsvp-cancel:hover{color:#6a6478;}
+  .rsvp-error{color:var(--coral);font-size:.84rem;font-weight:700;margin-top:10px;text-align:center;}
+  .rsvp-message{text-align:center;padding:10px 0 4px;}
+  .rsvp-message .emoji{font-size:2.4rem;display:block;margin-bottom:10px;}
+  .rsvp-message h3{padding-right:0;}
+  .rsvp-message p{color:#6a6478;font-weight:500;margin-top:6px;}
+
   /* LINKS */
   .links{display:flex;flex-direction:column;gap:12px;max-width:440px;margin:0 auto;}
   .linkbtn{display:flex;align-items:center;gap:14px;background:var(--white);color:var(--ink);text-decoration:none;padding:16px 20px;border-radius:16px;font-weight:700;font-size:1.05rem;box-shadow:0 6px 16px rgba(0,0,0,.10);transition:transform .15s ease, box-shadow .15s ease;}
@@ -139,6 +166,32 @@
   <footer>
     See you on the road, Long Beach. ☀️
   </footer>
+
+  <div class="rsvp-overlay" id="rsvpOverlay">
+    <div class="rsvp-modal">
+      <button class="rsvp-close" id="rsvpClose" aria-label="Close">×</button>
+
+      <div id="rsvpFormView">
+        <h3>I'm in!</h3>
+        <div class="rsvp-sub" id="rsvpRunLabel"></div>
+        <form id="rsvpForm">
+          <div class="rsvp-field">
+            <label for="rsvpName">Name</label>
+            <input type="text" id="rsvpName" autocomplete="name" required>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvpEmail">Email</label>
+            <input type="email" id="rsvpEmail" autocomplete="email" required>
+          </div>
+          <button type="submit" class="rsvp-submit" id="rsvpSubmitBtn">Submit</button>
+          <button type="button" class="rsvp-cancel" id="rsvpCancel">Never mind</button>
+          <div class="rsvp-error" id="rsvpError" style="display:none;"></div>
+        </form>
+      </div>
+
+      <div class="rsvp-message" id="rsvpResultView" style="display:none;"></div>
+    </div>
+  </div>
 
   <script>
     const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQc1oxaX2MVIhfqI3IGloblAncj0hoDgE5ur-dMVdsoMNvgJCQ1ibPkmXMItLlMH1gZb_3tXHvaDHl6/pub?gid=0&single=true&output=csv';
@@ -309,6 +362,13 @@
           body.append(tag);
         }
 
+        const rsvpBtn = document.createElement('button');
+        rsvpBtn.type = 'button';
+        rsvpBtn.className = 'rsvp-btn';
+        rsvpBtn.textContent = "I'm in";
+        rsvpBtn.addEventListener('click', () => openRsvpModal(run, dt));
+        body.append(rsvpBtn);
+
         card.append(dateEl, body);
         runlist.append(card);
       });
@@ -332,6 +392,86 @@
       document.getElementById('nextrun-when').textContent =
         `${WEEKDAYS[dt.getDay()]}, ${MONTHS[dt.getMonth()]} ${dt.getDate()} · ${run.time} · ${run.location}`;
     }
+
+    // RSVP
+
+    const RSVP_URL = 'https://script.google.com/macros/s/AKfycbzS1uun0DUmoVsdrmSPgWIx204wswEQkCESycaN_EeoVtUjxxXqX5d410YPhJaZSXGwcQ/exec';
+
+    const rsvpOverlay = document.getElementById('rsvpOverlay');
+    const rsvpFormView = document.getElementById('rsvpFormView');
+    const rsvpResultView = document.getElementById('rsvpResultView');
+    const rsvpRunLabel = document.getElementById('rsvpRunLabel');
+    const rsvpForm = document.getElementById('rsvpForm');
+    const rsvpNameInput = document.getElementById('rsvpName');
+    const rsvpEmailInput = document.getElementById('rsvpEmail');
+    const rsvpSubmitBtn = document.getElementById('rsvpSubmitBtn');
+    const rsvpError = document.getElementById('rsvpError');
+
+    let currentRunLabel = '';
+
+    function openRsvpModal(run, dt) {
+      currentRunLabel = `${run.title} ${MONTHS[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`;
+      rsvpRunLabel.textContent = `${run.title} · ${WEEKDAYS[dt.getDay()]}, ${MONTHS[dt.getMonth()]} ${dt.getDate()}`;
+
+      rsvpForm.reset();
+      rsvpError.style.display = 'none';
+      rsvpSubmitBtn.disabled = false;
+      rsvpSubmitBtn.textContent = 'Submit';
+      rsvpFormView.style.display = '';
+      rsvpResultView.style.display = 'none';
+
+      rsvpOverlay.classList.add('active');
+      rsvpNameInput.focus();
+    }
+
+    function closeRsvpModal() {
+      rsvpOverlay.classList.remove('active');
+    }
+
+    document.getElementById('rsvpClose').addEventListener('click', closeRsvpModal);
+    document.getElementById('rsvpCancel').addEventListener('click', closeRsvpModal);
+    rsvpOverlay.addEventListener('click', (e) => {
+      if (e.target === rsvpOverlay) closeRsvpModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && rsvpOverlay.classList.contains('active')) closeRsvpModal();
+    });
+
+    rsvpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      rsvpError.style.display = 'none';
+      rsvpSubmitBtn.disabled = true;
+      rsvpSubmitBtn.textContent = 'Submitting…';
+
+      const payload = {
+        run: currentRunLabel,
+        name: rsvpNameInput.value.trim(),
+        email: rsvpEmailInput.value.trim(),
+      };
+
+      try {
+        const response = await fetch(RSVP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+        });
+        if (!response.ok) throw new Error(`RSVP failed: ${response.status}`);
+
+        rsvpFormView.style.display = 'none';
+        rsvpResultView.style.display = '';
+        rsvpResultView.innerHTML = `
+          <span class="emoji">☀️</span>
+          <h3>You're in!</h3>
+          <p>See you there.</p>
+        `;
+      } catch (err) {
+        console.warn('RSVP submit failed:', err);
+        rsvpError.textContent = 'Something went wrong, please try again.';
+        rsvpError.style.display = '';
+        rsvpSubmitBtn.disabled = false;
+        rsvpSubmitBtn.textContent = 'Submit';
+      }
+    });
 
     loadRuns().then(runs => {
       renderSchedule(runs);
