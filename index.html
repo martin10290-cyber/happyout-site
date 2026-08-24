@@ -111,8 +111,8 @@
   <div class="nextrun">
     <div class="nextrun-inner">
       <div class="eyebrow">Next run</div>
-      <h2>Evening Shakeout</h2>
-      <div class="when">Wed, Aug 19 · 6:00 PM · @ lululemon 2nd &amp; PCH</div>
+      <h2 id="nextrun-title"></h2>
+      <div class="when" id="nextrun-when"></div>
     </div>
   </div>
 
@@ -120,28 +120,7 @@
     <div class="wrap">
       <h2 class="section-title">August Schedule</h2>
       <p class="section-sub">All runs are free — just show up. The LB Half build is ON.</p>
-      <div class="runlist">
-        <div class="run">
-          <div class="date"><span class="mon">Aug</span><span class="day">19</span></div>
-          <div class="run-body"><div class="run-title">Evening Shakeout</div><div class="run-meta">6:00 PM · @ lululemon 2nd &amp; PCH</div></div>
-        </div>
-        <div class="run">
-          <div class="date"><span class="mon">Aug</span><span class="day">21</span></div>
-          <div class="run-body"><div class="run-title">Fast Fridays</div><div class="run-meta">6:45 AM · Chittick Track</div></div>
-        </div>
-        <div class="run highlight">
-          <div class="date"><span class="mon">Aug</span><span class="day">23</span></div>
-          <div class="run-body"><div class="run-title">LB Half Training Run #2</div><div class="run-meta">8:00 AM · @ Ubuntu with Movement Chiropractic</div><span class="tag">Half Build</span></div>
-        </div>
-        <div class="run">
-          <div class="date"><span class="mon">Aug</span><span class="day">26</span></div>
-          <div class="run-body"><div class="run-title">Evening Run</div><div class="run-meta">6:00 PM · @ lululemon 2nd &amp; PCH</div></div>
-        </div>
-        <div class="run highlight">
-          <div class="date"><span class="mon">Aug</span><span class="day">30</span></div>
-          <div class="run-body"><div class="run-title">LB Half Training Run #3</div><div class="run-meta">8:00 AM · Meet at Neat Coffee</div><div class="run-note">Running Bolsa Chica wetlands</div><span class="tag">Half Build</span></div>
-        </div>
-      </div>
+      <div class="runlist" id="runlist"></div>
     </div>
   </section>
 
@@ -160,6 +139,108 @@
   <footer>
     See you on the road, Long Beach. ☀️
   </footer>
+
+  <script>
+    const RUNS = [
+      { date: '2026-08-19', time: '6:00 PM', title: 'Evening Shakeout', location: '@ lululemon 2nd & PCH', halfBuild: false },
+      { date: '2026-08-21', time: '6:45 AM', title: 'Fast Fridays', location: 'Chittick Track', halfBuild: false },
+      { date: '2026-08-23', time: '8:00 AM', title: 'LB Half Training Run #2', location: '@ Ubuntu with Movement Chiropractic', halfBuild: true },
+      { date: '2026-08-26', time: '6:00 PM', title: 'Evening Run', location: '@ lululemon 2nd & PCH', halfBuild: false },
+      { date: '2026-08-30', time: '8:00 AM', title: 'LB Half Training Run #3', location: 'Meet at Neat Coffee', note: 'Running Bolsa Chica wetlands', halfBuild: true },
+    ];
+
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    function parseRunDate(run) {
+      const [y, m, d] = run.date.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function parseRunDateTime(run) {
+      const dt = parseRunDate(run);
+      const match = run.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      let hours = parseInt(match[1], 10);
+      const minutes = parseInt(match[2], 10);
+      const period = match[3].toUpperCase();
+      if (period === 'PM' && hours !== 12) hours += 12;
+      if (period === 'AM' && hours === 12) hours = 0;
+      dt.setHours(hours, minutes, 0, 0);
+      return dt;
+    }
+
+    function renderSchedule() {
+      const runlist = document.getElementById('runlist');
+      RUNS.forEach(run => {
+        const dt = parseRunDate(run);
+
+        const card = document.createElement('div');
+        card.className = run.halfBuild ? 'run highlight' : 'run';
+
+        const dateEl = document.createElement('div');
+        dateEl.className = 'date';
+        const mon = document.createElement('span');
+        mon.className = 'mon';
+        mon.textContent = MONTHS[dt.getMonth()];
+        const day = document.createElement('span');
+        day.className = 'day';
+        day.textContent = dt.getDate();
+        dateEl.append(mon, day);
+
+        const body = document.createElement('div');
+        body.className = 'run-body';
+
+        const title = document.createElement('div');
+        title.className = 'run-title';
+        title.textContent = run.title;
+
+        const meta = document.createElement('div');
+        meta.className = 'run-meta';
+        meta.textContent = `${run.time} · ${run.location}`;
+
+        body.append(title, meta);
+
+        if (run.note) {
+          const note = document.createElement('div');
+          note.className = 'run-note';
+          note.textContent = run.note;
+          body.append(note);
+        }
+
+        if (run.halfBuild) {
+          const tag = document.createElement('span');
+          tag.className = 'tag';
+          tag.textContent = 'Half Build';
+          body.append(tag);
+        }
+
+        card.append(dateEl, body);
+        runlist.append(card);
+      });
+    }
+
+    function renderNextRun() {
+      const now = new Date();
+      const upcoming = RUNS
+        .map(run => ({ run, dt: parseRunDateTime(run) }))
+        .filter(({ dt }) => dt >= now)
+        .sort((a, b) => a.dt - b.dt)[0];
+
+      const nextrun = document.querySelector('.nextrun');
+      if (!upcoming) {
+        nextrun.style.display = 'none';
+        return;
+      }
+
+      const { run, dt } = upcoming;
+      document.getElementById('nextrun-title').textContent = run.title;
+      document.getElementById('nextrun-when').textContent =
+        `${WEEKDAYS[dt.getDay()]}, ${MONTHS[dt.getMonth()]} ${dt.getDate()} · ${run.time} · ${run.location}`;
+    }
+
+    renderSchedule();
+    renderNextRun();
+  </script>
 
 </body>
 </html>
