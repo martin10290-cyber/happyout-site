@@ -87,6 +87,9 @@
   /* RSVP */
   .rsvp-btn{display:inline-block;background:var(--sky-deep);color:var(--white);font-family:'Anton',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:7px 16px;border-radius:20px;margin-top:10px;margin-right:6px;border:none;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease;box-shadow:0 4px 10px rgba(63,184,198,.35);}
   .rsvp-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(63,184,198,.45);}
+  .cal-btn{display:inline-flex;align-items:center;gap:5px;background:transparent;color:var(--ink);opacity:.65;font-family:'Anton',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;padding:6px 14px;border-radius:20px;margin-top:10px;border:2px solid currentColor;cursor:pointer;transition:opacity .15s ease, transform .15s ease;}
+  .cal-btn:hover{opacity:1;transform:translateY(-1px);}
+  .cal-btn svg{flex:0 0 auto;}
 
   .rsvp-overlay{position:fixed;inset:0;background:rgba(42,36,56,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s ease;}
   .rsvp-overlay.active{opacity:1;pointer-events:auto;}
@@ -223,6 +226,107 @@
       if (period === 'AM' && hours === 12) hours = 0;
       dt.setHours(hours, minutes, 0, 0);
       return dt;
+    }
+
+    // .ics calendar export
+
+    const RUN_TIMEZONE = 'America/Los_Angeles';
+
+    // Converts wall-clock date/time components (interpreted in `timeZone`) to
+    // the corresponding UTC Date, independent of the browser's own timezone.
+    function zonedTimeToUtc(year, month, day, hours, minutes, timeZone) {
+      const utcGuess = Date.UTC(year, month - 1, day, hours, minutes);
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        hourCycle: 'h23',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+      });
+      const parts = dtf.formatToParts(new Date(utcGuess)).reduce((acc, p) => {
+        acc[p.type] = p.value;
+        return acc;
+      }, {});
+      const asIfLocalWereUtc = Date.UTC(
+        Number(parts.year), Number(parts.month) - 1, Number(parts.day),
+        Number(parts.hour), Number(parts.minute), Number(parts.second)
+      );
+      return new Date(utcGuess + (utcGuess - asIfLocalWereUtc));
+    }
+
+    function formatICSDateUTC(date) {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    }
+
+    // Escapes text per RFC 5545 §3.3.11 (backslash, semicolon, comma, newline).
+    function icsEscapeText(text) {
+      return String(text)
+        .replace(/\\/g, '\\\\')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,')
+        .replace(/\r\n|\n|\r/g, '\\n');
+    }
+
+    // Folds a content line to <=75 octets per RFC 5545 §3.1, with a leading
+    // space on continuation lines.
+    function foldICSLine(line) {
+      const maxLen = 75;
+      if (line.length <= maxLen) return line;
+      let result = line.slice(0, maxLen);
+      let idx = maxLen;
+      while (idx < line.length) {
+        result += '\r\n ' + line.slice(idx, idx + maxLen - 1);
+        idx += maxLen - 1;
+      }
+      return result;
+    }
+
+    function slugify(text) {
+      return String(text)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function buildRunICS(run) {
+      const dt = parseRunDateTime(run);
+      const start = zonedTimeToUtc(
+        dt.getFullYear(), dt.getMonth() + 1, dt.getDate(), dt.getHours(), dt.getMinutes(), RUN_TIMEZONE
+      );
+      const end = new Date(start.getTime() + 60 * 60 * 1000);
+      const uid = `${formatICSDateUTC(start)}-${slugify(run.title)}@happyoutrunclub.netlify.app`;
+
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Happy Out Run Club//Schedule//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${formatICSDateUTC(new Date())}`,
+        `DTSTART:${formatICSDateUTC(start)}`,
+        `DTEND:${formatICSDateUTC(end)}`,
+        `SUMMARY:${icsEscapeText('Happy Out: ' + run.title)}`,
+        `LOCATION:${icsEscapeText(run.location)}`,
+        `DESCRIPTION:${icsEscapeText('Happy Out Run Club — see happyoutrunclub.netlify.app')}`,
+        'END:VEVENT',
+        'END:VCALENDAR',
+      ];
+
+      return lines.map(foldICSLine).join('\r\n') + '\r\n';
+    }
+
+    function downloadRunICS(run) {
+      const ics = buildRunICS(run);
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `happy-out-${slugify(run.title)}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
     // Minimal RFC4180-style CSV parser: handles quoted fields, commas and
@@ -367,7 +471,14 @@
         rsvpBtn.className = 'rsvp-btn';
         rsvpBtn.textContent = "I'm in";
         rsvpBtn.addEventListener('click', () => openRsvpModal(run, dt));
-        body.append(rsvpBtn);
+
+        const calBtn = document.createElement('button');
+        calBtn.type = 'button';
+        calBtn.className = 'cal-btn';
+        calBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Add to Calendar';
+        calBtn.addEventListener('click', () => downloadRunICS(run));
+
+        body.append(rsvpBtn, calBtn);
 
         card.append(dateEl, body);
         runlist.append(card);
