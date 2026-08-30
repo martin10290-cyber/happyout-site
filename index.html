@@ -158,6 +158,27 @@
   .photo-dl:hover{background:var(--sun);transform:translate(-1px,-1px);box-shadow:3px 4px 0 var(--ink);}
   .photo-dl:active{transform:translate(1px,2px);box-shadow:0px 1px 0 var(--ink);}
   .photos-empty{text-align:center;font-weight:700;padding:26px 10px 6px;color:#1f6b45;}
+  .see-all-btn{
+    display:flex;
+    width:fit-content;
+    align-items:center;
+    gap:6px;
+    margin:22px auto 4px;
+    padding:11px 24px;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Anton',sans-serif;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    text-decoration:none;
+    border-radius:14px;
+    border:2.5px solid var(--ink);
+    box-shadow:3px 4px 0 var(--mint-deep);
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .see-all-btn:hover{background:var(--mint);transform:translate(-1px,-2px);box-shadow:4px 6px 0 var(--mint-deep);}
+  .see-all-btn:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--mint-deep);}
 
   @media (min-width:480px){.photo-grid{grid-template-columns:repeat(3,1fr);gap:14px;}}
   @media (min-width:700px){.photo-grid{grid-template-columns:repeat(4,1fr);gap:16px;}}
@@ -321,6 +342,7 @@
     .date{flex:0 0 52px;}
     .panel{padding:24px 14px 22px;border-radius:24px;}
     .rsvp-btn,.cal-btn{width:100%;justify-content:center;margin-right:0;}
+    .see-all-btn{width:100%;justify-content:center;}
   }
 </style>
 </head>
@@ -363,6 +385,7 @@
         <p class="section-sub">Group run pics — tap to save your favorites.</p>
         <div class="photo-grid" id="photoGrid"></div>
         <p class="photos-empty" id="photosEmpty" style="display:none;">Photos coming soon ☀️</p>
+        <a class="see-all-btn" id="seeAllBtn" href="https://drive.google.com/drive/folders/1P3LXrQw3g2vO-D4rnHISkCXXX3cQg5dM?usp=sharing" target="_blank" rel="noopener" style="display:none;">See All Photos →</a>
       </div>
     </div>
   </section>
@@ -809,6 +832,7 @@
     // Photos
 
     const PHOTOS_URL = 'https://script.google.com/macros/s/AKfycbxNQPwrvuGkQCCoY8zbk0u2BxUEE6pQc_R0QS9_Uwimb3C0PB11PneFhp-FFSvRvZTDSg/exec';
+    const PHOTOS_PREVIEW_LIMIT = 8;
 
     async function loadPhotos() {
       try {
@@ -826,19 +850,22 @@
     function renderPhotos(photos) {
       const grid = document.getElementById('photoGrid');
       const empty = document.getElementById('photosEmpty');
+      const seeAll = document.getElementById('seeAllBtn');
 
       grid.innerHTML = '';
 
       if (!photos.length) {
         grid.style.display = 'none';
         empty.style.display = '';
+        seeAll.style.display = 'none';
         return;
       }
 
       grid.style.display = '';
       empty.style.display = 'none';
+      seeAll.style.display = '';
 
-      photos.forEach(photo => {
+      photos.slice(0, PHOTOS_PREVIEW_LIMIT).forEach(photo => {
         const card = document.createElement('div');
         card.className = 'photo-card';
 
