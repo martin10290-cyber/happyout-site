@@ -24,6 +24,7 @@
     --mint:#8FE3B0;
     --sun:#FFC93C;
     --sun-deep:#F2A900;
+    --mint-deep:#3FAE72;
     --ink:#2A2438;
     --white:#ffffff;
     --cream:#FFF7EA;
@@ -57,6 +58,7 @@
   .squiggle.c-sky{color:var(--sky-deep);}
   .squiggle.c-sun{color:var(--sun-deep);}
   .squiggle.c-pink{color:var(--pink-deep);}
+  .squiggle.c-mint{color:var(--mint-deep);}
 
   /* HERO */
   .hero{background:var(--pink);padding:34px 0 22px;text-align:center;position:relative;overflow:hidden;}
@@ -118,6 +120,47 @@
   .panel-sun{background:var(--sun);}
   .panel-sun .section-title{color:var(--ink);text-shadow:3px 3px 0 var(--coral);}
   .panel-sun .section-sub{color:#8a5a00;}
+  .panel-mint{background:var(--mint);}
+  .panel-mint .section-title{color:var(--ink);text-shadow:3px 3px 0 var(--mint-deep);}
+  .panel-mint .section-sub{color:#1f6b45;opacity:.85;}
+
+  /* PHOTOS */
+  .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .photo-card{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:18px;
+    overflow:hidden;
+    border:2.5px solid var(--ink);
+    background:var(--cream);
+    box-shadow:3px 4px 0 rgba(42,36,56,.9);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .photo-card:hover{transform:translateY(-3px);box-shadow:4px 6px 0 rgba(42,36,56,.9);}
+  .photo-card img{width:100%;height:100%;object-fit:cover;display:block;background:var(--cream);}
+  .photo-dl{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:var(--cream);
+    border:2.5px solid var(--ink);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:2px 3px 0 var(--ink);
+    text-decoration:none;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .photo-dl:hover{background:var(--sun);transform:translate(-1px,-1px);box-shadow:3px 4px 0 var(--ink);}
+  .photo-dl:active{transform:translate(1px,2px);box-shadow:0px 1px 0 var(--ink);}
+  .photos-empty{text-align:center;font-weight:700;padding:26px 10px 6px;color:#1f6b45;}
+
+  @media (min-width:480px){.photo-grid{grid-template-columns:repeat(3,1fr);gap:14px;}}
+  @media (min-width:700px){.photo-grid{grid-template-columns:repeat(4,1fr);gap:16px;}}
 
   /* SCHEDULE */
   .runlist{display:flex;flex-direction:column;gap:14px;}
@@ -307,6 +350,19 @@
         <h2 class="section-title">August Schedule</h2>
         <p class="section-sub">All runs are free — just show up. The LB Half build is ON.</p>
         <div class="runlist" id="runlist"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="squiggle c-mint" aria-hidden="true"><svg viewBox="0 0 200 20" preserveAspectRatio="none"><path d="M0 10 Q 12.5 0 25 10 T 50 10 T 75 10 T 100 10 T 125 10 T 150 10 T 175 10 T 200 10" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></div>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="panel panel-mint">
+        <h2 class="section-title">Snapshots</h2>
+        <p class="section-sub">Group run pics — tap to save your favorites.</p>
+        <div class="photo-grid" id="photoGrid"></div>
+        <p class="photos-empty" id="photosEmpty" style="display:none;">Photos coming soon ☀️</p>
       </div>
     </div>
   </section>
@@ -749,6 +805,65 @@
       renderSchedule(runs);
       renderNextRun(runs);
     });
+
+    // Photos
+
+    const PHOTOS_URL = 'https://script.google.com/macros/s/AKfycbxNQPwrvuGkQCCoY8zbk0u2BxUEE6pQc_R0QS9_Uwimb3C0PB11PneFhp-FFSvRvZTDSg/exec';
+
+    async function loadPhotos() {
+      try {
+        const response = await fetch(PHOTOS_URL);
+        if (!response.ok) throw new Error(`Photos fetch failed: ${response.status}`);
+        const data = await response.json();
+        const photos = Array.isArray(data.photos) ? data.photos : [];
+        return photos.filter(p => p && typeof p.thumb === 'string' && typeof p.download === 'string');
+      } catch (err) {
+        console.warn('Photos unavailable:', err);
+        return [];
+      }
+    }
+
+    function renderPhotos(photos) {
+      const grid = document.getElementById('photoGrid');
+      const empty = document.getElementById('photosEmpty');
+
+      grid.innerHTML = '';
+
+      if (!photos.length) {
+        grid.style.display = 'none';
+        empty.style.display = '';
+        return;
+      }
+
+      grid.style.display = '';
+      empty.style.display = 'none';
+
+      photos.forEach(photo => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+
+        const img = document.createElement('img');
+        img.src = photo.thumb;
+        img.alt = photo.name ? `Happy Out run photo: ${photo.name}` : 'Happy Out group run photo';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.addEventListener('error', () => card.remove(), { once: true });
+
+        const dl = document.createElement('a');
+        dl.className = 'photo-dl';
+        dl.href = photo.download;
+        dl.download = photo.name || '';
+        dl.target = '_blank';
+        dl.rel = 'noopener';
+        dl.setAttribute('aria-label', 'Download photo');
+        dl.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>';
+
+        card.append(img, dl);
+        grid.append(card);
+      });
+    }
+
+    loadPhotos().then(renderPhotos);
   </script>
 
 </body>
