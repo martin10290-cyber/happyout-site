@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NZC9QXMX');</script>
+<!-- End Google Tag Manager -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Out Run Club — Long Beach</title>
 <meta name="description" content="Happy Out Run Club — Long Beach, California. Find your fast, stay happy. Weekly runs + Long Beach Half Marathon training, all in one place.">
@@ -306,6 +313,10 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NZC9QXMX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
   <div class="topbar">☀ RSVP for runs + grab club photos below ☀</div>
   <nav class="nav">
@@ -417,6 +428,16 @@
   </div>
 
   <script>
+    // Analytics: push to GTM's dataLayer. Never let tracking break the site.
+    function trackEvent(data) {
+      try {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(data);
+      } catch (err) {
+        console.warn('trackEvent failed:', err);
+      }
+    }
+
     const SCHEDULE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQc1oxaX2MVIhfqI3IGloblAncj0hoDgE5ur-dMVdsoMNvgJCQ1ibPkmXMItLlMH1gZb_3tXHvaDHl6/pub?gid=0&single=true&output=csv';
 
     // Used only if the live CSV fails to load or parse.
@@ -547,6 +568,13 @@
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      let runName = (run && run.title) || '';
+      try {
+        const dt = parseRunDate(run);
+        runName = `${run.title} ${MONTHS[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`;
+      } catch (err) { /* keep title-only fallback */ }
+      trackEvent({ event: 'add_to_calendar', run_name: runName || 'unknown' });
     }
 
     // Minimal RFC4180-style CSV parser: handles quoted fields, commas and
@@ -795,6 +823,8 @@
           <h3>You're in!</h3>
           <p>See you there.</p>
         `;
+
+        trackEvent({ event: 'rsvp_submitted', run_name: currentRunLabel || 'unknown' });
       } catch (err) {
         console.warn('RSVP submit failed:', err);
         rsvpError.textContent = 'Something went wrong, please try again.';
@@ -863,6 +893,9 @@
         dl.target = '_blank';
         dl.rel = 'noopener';
         dl.setAttribute('aria-label', 'Download photo');
+        dl.addEventListener('click', () => {
+          trackEvent({ event: 'photo_download', photo_name: photo.name || photo.id || photo.download || 'unknown' });
+        });
         dl.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>';
 
         card.append(img, dl);
@@ -871,6 +904,30 @@
     }
 
     loadPhotos().then(renderPhotos);
+
+    // Outbound link tracking (Strava, Instagram, Shopify, Drive album)
+    // Drive is limited to /drive/ folder links so photo downloads (drive.google.com/uc) aren't double-counted.
+    const OUTBOUND_HOSTS = [
+      { match: 'strava.com', name: 'strava' },
+      { match: 'instagram.com', name: 'instagram' },
+      { match: 'myshopify.com', name: 'shopify' },
+      { match: 'drive.google.com', name: 'drive', path: '/drive/' },
+    ];
+
+    function handleOutboundClick(e) {
+      if (e.type === 'auxclick' && e.button !== 1) return;
+      const link = e.target.closest && e.target.closest('a[href]');
+      if (!link) return;
+      let host = '', path = '';
+      try { ({ hostname: host, pathname: path } = new URL(link.href)); } catch (err) { return; }
+      const hit = OUTBOUND_HOSTS.find(h =>
+        (host === h.match || host.endsWith('.' + h.match)) && (!h.path || path.startsWith(h.path)));
+      if (!hit) return;
+      trackEvent({ event: 'outbound_click', link_name: hit.name, link_url: link.href || '' });
+    }
+
+    document.addEventListener('click', handleOutboundClick);
+    document.addEventListener('auxclick', handleOutboundClick);
 
     // Countdown to the LB Half
 
