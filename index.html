@@ -36,6 +36,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     --ink:#4A3F52;
     --white:#ffffff;
     --cream:#FBF3E4;
+    --pickle:#CDE8A6;
+    --pickle-deep:#3E6B24;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -288,6 +290,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .linkbtn .arrow{margin-left:auto;opacity:.4;}
 
   /* FOOTER */
+  /* Big Dill teaser */
+  .panel-pickle{background:var(--pickle);}
+  .dill{text-align:center;color:var(--pickle-deep);}
+  .dill-eyebrow{display:inline-block;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;background:var(--white);padding:5px 14px;border-radius:20px;}
+  .dill-pickle{font-size:3.4rem;line-height:1;margin-top:14px;display:inline-block;animation:dillwiggle 2.4s ease-in-out infinite;}
+  @keyframes dillwiggle{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+  @media (prefers-reduced-motion:reduce){.dill-pickle{animation:none}}
+  .dill-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(2.1rem,8vw,3rem);line-height:1.05;margin-top:6px;}
+  .dill-dist{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.2rem;margin-top:4px;}
+  .dill-date{display:inline-flex;flex-direction:column;background:var(--pickle-deep);color:var(--white);border-radius:18px;padding:10px 22px;margin-top:16px;font-family:'Fredoka',sans-serif;line-height:1.1;}
+  .dill-date span{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;}
+  .dill-date b{font-size:1.6rem;font-weight:700;}
+  .dill-copy{max-width:440px;margin:16px auto 0;font-weight:600;line-height:1.5;}
+  .dill-cta{display:inline-block;margin-top:16px;background:var(--white);color:var(--pickle-deep);font-family:'Fredoka',sans-serif;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:30px;box-shadow:0 5px 0 rgba(62,107,36,.35);transition:transform .15s ease;}
+  .dill-cta:hover{transform:translateY(-2px);}
   /* FAQ */
   .faq{display:flex;flex-direction:column;gap:12px;}
   .faq details{background:var(--white);border-radius:22px;box-shadow:0 6px 0 rgba(185,184,240,.4);overflow:hidden;}
@@ -318,9 +335,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="topbar">☀ RSVP for runs + grab club photos below ☀</div>
   <nav class="nav">
     <a href="#schedule">Schedule</a>
+    <a href="#findus">Find Us</a>
     <a href="#photos">Photos</a>
     <a href="#faq">FAQ</a>
-    <a href="#findus">Find Us</a>
   </nav>
 
   <header class="hero">
@@ -341,6 +358,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
+  <svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0,20 C150,45 300,-5 450,20 C600,45 750,-5 900,20 C1050,45 1200,0 1200,20 L1200,40 L0,40 Z" fill="var(--pickle)"/></svg>
+
+  <section class="block panel-pickle" id="bigdill">
+    <div class="wrap">
+      <div class="dill">
+        <div class="dill-eyebrow">Save the date</div>
+        <div class="dill-pickle" aria-hidden="true">🥒</div>
+        <h2 class="dill-title">You're a Big Dill</h2>
+        <div class="dill-dist">5K + 10K</div>
+        <div class="dill-date"><span>Sun</span><b>Dec 13</b></div>
+        <p class="dill-copy">A pickle-powered race day is coming to Long Beach. Route, details, and signup dropping soon.</p>
+        <a class="dill-cta" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Get the details first on Instagram →</a>
+      </div>
+    </div>
+  </section>
+
   <svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0,20 C150,45 300,-5 450,20 C600,45 750,-5 900,20 C1050,45 1200,0 1200,20 L1200,40 L0,40 Z" fill="var(--cream)"/></svg>
 
   <section class="block panel-cream" id="schedule">
@@ -348,6 +381,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="section-title">Run Club Schedule</h2>
       <p class="section-sub">All runs are free, just show up.</p>
       <div class="runlist" id="runlist"></div>
+    </div>
+  </section>
+
+  <svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0,20 C150,45 300,-5 450,20 C600,45 750,-5 900,20 C1050,45 1200,0 1200,20 L1200,40 L0,40 Z" fill="var(--sky)"/></svg>
+
+  <section class="block panel-sky" id="findus">
+    <div class="wrap">
+      <h2 class="section-title">Find Us</h2>
+      <p class="section-sub">Wherever you already hang out — we're there.</p>
+      <div class="links">
+        <a class="linkbtn" href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener"><span class="ic">🏃</span> Join us on Strava <span class="arrow">→</span></a>
+        <a class="linkbtn" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener"><span class="ic">📸</span> Follow on Instagram <span class="arrow">→</span></a>
+        <a class="linkbtn" href="https://happyoutrunclub.myshopify.com/" target="_blank" rel="noopener"><span class="ic">👕</span> Shop the Merch <span class="arrow">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -375,24 +422,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <details><summary>How fast do you go?</summary><div class="ans">Every pace is welcome. Run your own pace, and we regroup at the end.</div></details>
         <details><summary>How far are the runs?</summary><div class="ans">Usually 3 to 5 miles. Check each run on the <a href="#schedule">schedule</a> for details.</div></details>
         <details><summary>I'm new to running. Is this for me?</summary><div class="ans">Absolutely. Walk breaks are totally fine, and nobody gets judged for their pace. Plenty of us started as beginners.</div></details>
-        <details><summary>Where do we meet?</summary><div class="ans">The meetup spot is listed on each run in the <a href="#schedule">schedule</a>. Tap "Add to Calendar" to save the time and place.</div></details>
+        <details><summary>Where do we meet?</summary><div class="ans">The meetup spot is listed on each run in the <a href="#schedule">schedule</a>. Tap "Add to Calendar" to save the time and place. For route details, join our <a href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener">Strava club</a>, where we post each route.</div></details>
         <details><summary>Can I bring my dog or a stroller?</summary><div class="ans">Yes, both are welcome.</div></details>
         <details><summary>What happens after the run?</summary><div class="ans">We usually grab coffee and hang out. Stay as long as you like.</div></details>
         <details><summary>How do I stay in the loop?</summary><div class="ans">Bookmark this page, and follow us on <a href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Instagram</a> and <a href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener">Strava</a>.</div></details>
-      </div>
-    </div>
-  </section>
-
-  <svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0,20 C150,45 300,-5 450,20 C600,45 750,-5 900,20 C1050,45 1200,0 1200,20 L1200,40 L0,40 Z" fill="var(--sky)"/></svg>
-
-  <section class="block panel-sky" id="findus">
-    <div class="wrap">
-      <h2 class="section-title">Find Us</h2>
-      <p class="section-sub">Wherever you already hang out — we're there.</p>
-      <div class="links">
-        <a class="linkbtn" href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener"><span class="ic">🏃</span> Join us on Strava <span class="arrow">→</span></a>
-        <a class="linkbtn" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener"><span class="ic">📸</span> Follow on Instagram <span class="arrow">→</span></a>
-        <a class="linkbtn" href="https://happyoutrunclub.myshopify.com/" target="_blank" rel="noopener"><span class="ic">👕</span> Shop the Merch <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
@@ -932,5 +965,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.addEventListener('auxclick', handleOutboundClick);
   </script>
 
+<script>
+  (function(){var d=document.getElementById('bigdill');if(!d)return;
+    if(Date.now()>new Date('2026-12-14T00:00:00-08:00').getTime()){d.style.display='none';var w=d.previousElementSibling;if(w&&w.classList.contains('wave'))w.style.display='none';}})();
+</script>
 </body>
 </html>
