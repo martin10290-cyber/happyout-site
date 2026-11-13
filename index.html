@@ -288,6 +288,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .linkbtn .arrow{margin-left:auto;opacity:.4;}
 
   /* FOOTER */
+  /* FAQ */
+  .faq{display:flex;flex-direction:column;gap:12px;}
+  .faq details{background:var(--white);border-radius:22px;box-shadow:0 6px 0 rgba(185,184,240,.4);overflow:hidden;}
+  .faq summary{list-style:none;cursor:pointer;padding:18px 54px 18px 20px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.08rem;color:var(--ink);position:relative;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:var(--sky);color:var(--ink);font-size:1.2rem;line-height:28px;text-align:center;transition:transform .2s ease;}
+  .faq details[open] summary::after{content:"−";background:var(--coral-btn);color:var(--white);}
+  .faq summary:focus-visible{outline:3px solid var(--coral-btn);outline-offset:-3px;border-radius:22px;}
+  .faq .ans{padding:0 20px 18px;line-height:1.55;color:var(--ink);}
+  .faq .ans a{color:var(--coral-btn);font-weight:700;}
   footer{text-align:center;padding:34px 20px 40px;color:var(--ink);font-family:'Fredoka',sans-serif;font-weight:600;font-size:.92rem;background:var(--mint);}
   .footlogo{width:200px;height:auto;margin:0 auto 10px;display:block;opacity:.96;}
 
@@ -309,6 +319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <nav class="nav">
     <a href="#schedule">Schedule</a>
     <a href="#photos">Photos</a>
+    <a href="#faq">FAQ</a>
     <a href="#findus">Find Us</a>
   </nav>
 
@@ -349,6 +360,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="photo-grid" id="photoGrid"></div>
       <p class="photos-empty" id="photosEmpty" style="display:none;">Photos coming soon ☀️</p>
       <a class="see-all-btn" id="seeAllBtn" href="https://drive.google.com/drive/folders/1P3LXrQw3g2vO-D4rnHISkCXXX3cQg5dM?usp=sharing" target="_blank" rel="noopener" style="display:none;">See All Photos →</a>
+    </div>
+  </section>
+
+  <svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0,20 C150,45 300,-5 450,20 C600,45 750,-5 900,20 C1050,45 1200,0 1200,20 L1200,40 L0,40 Z" fill="var(--cream)"/></svg>
+
+  <section class="block panel-cream" id="faq">
+    <div class="wrap">
+      <h2 class="section-title">First Time?</h2>
+      <p class="section-sub">Everything you need to know before your first run.</p>
+      <div class="faq">
+        <details><summary>Is it free?</summary><div class="ans">Yes, every run is free. No membership, no fees.</div></details>
+        <details><summary>Do I need to sign up?</summary><div class="ans">Nope, just show up. Tapping "I'm in" on a run is optional, but it helps us know who's coming.</div></details>
+        <details><summary>How fast do you go?</summary><div class="ans">Every pace is welcome. Run your own pace, and we regroup at the end.</div></details>
+        <details><summary>How far are the runs?</summary><div class="ans">Usually 3 to 5 miles. Check each run on the <a href="#schedule">schedule</a> for details.</div></details>
+        <details><summary>I'm new to running. Is this for me?</summary><div class="ans">Absolutely. Walk breaks are totally fine, and nobody gets judged for their pace. Plenty of us started as beginners.</div></details>
+        <details><summary>Where do we meet?</summary><div class="ans">The meetup spot is listed on each run in the <a href="#schedule">schedule</a>. Tap "Add to Calendar" to save the time and place.</div></details>
+        <details><summary>Can I bring my dog or a stroller?</summary><div class="ans">Yes, both are welcome.</div></details>
+        <details><summary>What happens after the run?</summary><div class="ans">We usually grab coffee and hang out. Stay as long as you like.</div></details>
+        <details><summary>How do I stay in the loop?</summary><div class="ans">Bookmark this page, and follow us on <a href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Instagram</a> and <a href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener">Strava</a>.</div></details>
+      </div>
     </div>
   </section>
 
