@@ -10,11 +10,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-NZC9QXMX');</script>
 <!-- End Google Tag Manager -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Out Run Club — Long Beach</title>
-<meta name="description" content="Happy Out Run Club — Long Beach, California. Find your fast, stay happy. Weekly runs + Long Beach Half Marathon training, all in one place.">
+<title>Happy Out Run Club | Long Beach</title>
+<meta name="description" content="Happy Out Run Club in Long Beach, CA. Free weekly runs for every pace. Find your fast, stay happy. Schedule, RSVP, and club photos in one place.">
 <meta property="og:title" content="Happy Out Run Club">
-<meta property="og:description" content="Long Beach, CA. Find your fast, stay happy. Weekly runs + LB Half training.">
+<meta property="og:description" content="Free weekly runs in Long Beach for every pace. Schedule, RSVP, and club photos in one place.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://happyoutrunclub.netlify.app/">
+<meta property="og:site_name" content="Happy Out Run Club">
+<meta property="og:image" content="https://happyoutrunclub.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Happy Out Run Club logo with the tagline Find your fast, stay happy">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Happy Out Run Club">
+<meta name="twitter:description" content="Free weekly runs in Long Beach for every pace.">
+<meta name="twitter:image" content="https://happyoutrunclub.netlify.app/og-image.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#B9B8F0">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,6 +66,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .wrap{max-width:720px;margin:0 auto;padding:0 20px;}
 
   /* TOPBAR + NAV */
+  .topbar a{color:inherit;text-decoration:none;}
+  .topbar a:hover{text-decoration:underline;}
   .topbar{background:var(--mint);text-align:center;font-weight:700;font-size:.82rem;padding:9px;color:var(--ink);}
   .nav{background:var(--cream);display:flex;justify-content:center;gap:26px;align-items:center;padding:16px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;}
   .nav a{color:var(--ink);text-decoration:none;opacity:.8;transition:opacity .15s ease;}
@@ -336,7 +352,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-  <div class="topbar">☀ RSVP for runs + grab club photos below ☀</div>
+  <div class="topbar" id="topbar"><a href="#bigdill">🥒 You're a Big Dill 5K/10K, Sun Dec 13. Details soon!</a></div>
   <nav class="nav">
     <a href="#schedule">Schedule</a>
     <a href="#findus">Find Us</a>
@@ -972,7 +988,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <script>
   (function(){var d=document.getElementById('bigdill');if(!d)return;
-    if(Date.now()>new Date('2026-12-14T00:00:00-08:00').getTime()){d.style.display='none';var w=d.previousElementSibling;if(w&&w.classList.contains('wave'))w.style.display='none';}})();
+    if(Date.now()>new Date('2026-12-14T00:00:00-08:00').getTime()){d.style.display='none';var tb=document.getElementById('topbar');if(tb)tb.textContent='☀ RSVP for runs + grab club photos below ☀';var w=d.previousElementSibling;if(w&&w.classList.contains('wave'))w.style.display='none';}})();
 </script>
 </body>
 </html>
