@@ -290,6 +290,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .linkbtn .arrow{margin-left:auto;opacity:.4;}
 
   /* FOOTER */
+  .routes-wrap{text-align:center;margin:-8px 0 22px;}
+  .routes-link{display:inline-flex;align-items:center;gap:8px;background:var(--white);color:var(--coral-btn);font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;text-decoration:none;padding:11px 20px;border-radius:30px;box-shadow:0 5px 0 rgba(184,66,95,.25);transition:transform .15s ease,box-shadow .15s ease;}
+  .routes-link:hover{transform:translateY(-2px);box-shadow:0 7px 0 rgba(184,66,95,.25);}
+  .routes-link:focus-visible{outline:3px solid var(--coral-btn);outline-offset:3px;}
   /* Big Dill teaser */
   .panel-pickle{background:var(--pickle);}
   .dill{text-align:center;color:var(--pickle-deep);}
@@ -380,6 +384,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="wrap">
       <h2 class="section-title">Run Club Schedule</h2>
       <p class="section-sub">All runs are free, just show up.</p>
+      <div class="routes-wrap"><a class="routes-link" href="https://www.strava.com/clubs/1272286" target="_blank" rel="noopener" data-link-name="strava_routes"><span aria-hidden="true">🗺️</span> See every route on Strava <span aria-hidden="true">→</span></a></div>
       <div class="runlist" id="runlist"></div>
     </div>
   </section>
@@ -958,7 +963,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const hit = OUTBOUND_HOSTS.find(h =>
         (host === h.match || host.endsWith('.' + h.match)) && (!h.path || path.startsWith(h.path)));
       if (!hit) return;
-      trackEvent({ event: 'outbound_click', link_name: hit.name, link_url: link.href || '' });
+      trackEvent({ event: 'outbound_click', link_name: link.dataset.linkName || hit.name, link_url: link.href || '' });
     }
 
     document.addEventListener('click', handleOutboundClick);
