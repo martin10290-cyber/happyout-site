@@ -325,6 +325,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .dill-copy{max-width:440px;margin:16px auto 0;font-weight:600;line-height:1.5;}
   .dill-cta{display:inline-block;margin-top:16px;background:var(--white);color:var(--pickle-deep);font-family:'Fredoka',sans-serif;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:30px;box-shadow:0 5px 0 rgba(62,107,36,.35);transition:transform .15s ease;}
   .dill-cta:hover{transform:translateY(-2px);}
+  .dill-form{max-width:420px;margin:20px auto 0;background:var(--white);border-radius:22px;padding:20px;box-shadow:0 6px 0 rgba(62,107,36,.25);text-align:left;}
+  .dill-dist-pick{border:0;padding:0;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .dill-dist-pick legend{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:8px;color:var(--pickle-deep);}
+  .dill-dist-pick label{cursor:pointer;}
+  .dill-dist-pick input{position:absolute;opacity:0;pointer-events:none;}
+  .dill-dist-pick span{display:inline-block;padding:9px 16px;border-radius:24px;border:2px solid var(--pickle-deep);font-family:'Fredoka',sans-serif;font-weight:600;color:var(--pickle-deep);background:var(--white);transition:background .15s ease;}
+  .dill-dist-pick input:checked+span{background:var(--pickle-deep);color:var(--white);}
+  .dill-dist-pick input:focus-visible+span{outline:3px solid var(--coral-btn);outline-offset:2px;}
+  .dill-field{display:block;margin-bottom:12px;}
+  .dill-field span{display:block;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--pickle-deep);margin-bottom:5px;}
+  .dill-field input{width:100%;box-sizing:border-box;padding:12px 14px;border:2px solid #d9e9c4;border-radius:14px;font-size:1rem;font-family:inherit;color:var(--ink);}
+  .dill-field input:focus{outline:none;border-color:var(--pickle-deep);}
+  .dill-err{color:var(--coral-btn);font-weight:700;margin:0 0 10px;font-size:.92rem;}
+  .dill-submit{width:100%;background:var(--pickle-deep);color:var(--white);border:0;border-radius:30px;padding:14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.08rem;cursor:pointer;box-shadow:0 5px 0 #2a4a18;transition:transform .1s ease,box-shadow .1s ease;}
+  .dill-submit:hover{transform:translateY(-1px);}
+  .dill-submit:active{transform:translateY(3px);box-shadow:0 2px 0 #2a4a18;}
+  .dill-submit:disabled{opacity:.7;cursor:default;}
+  .dill-done{max-width:420px;margin:20px auto 0;background:var(--white);border-radius:22px;padding:22px;box-shadow:0 6px 0 rgba(62,107,36,.25);}
+  .dill-done-big{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;}
+  .dill-done p{margin:6px 0 0;font-weight:600;}
+  .dill-ig{display:inline-block;margin-top:16px;color:var(--pickle-deep);font-weight:700;text-decoration:underline;}
   /* FAQ */
   .faq{display:flex;flex-direction:column;gap:12px;}
   .faq details{background:var(--white);border-radius:22px;box-shadow:0 6px 0 rgba(185,184,240,.4);overflow:hidden;}
@@ -388,8 +409,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2 class="dill-title">You're a Big Dill</h2>
         <div class="dill-dist">5K + 10K</div>
         <div class="dill-date"><span>Sun</span><b>Dec 13</b></div>
-        <p class="dill-copy">A pickle-powered race day is coming to Long Beach. Route, details, and signup dropping soon.</p>
-        <a class="dill-cta" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Get the details first on Instagram →</a>
+        <p class="dill-copy">A pickle-powered race day is coming to Long Beach. Want in? Drop your info and we'll send you the details and registration link first.</p>
+        <form class="dill-form" id="dillForm" novalidate>
+          <fieldset class="dill-dist-pick">
+            <legend>Which distance?</legend>
+            <label><input type="radio" name="dillDist" value="5K" checked><span>5K</span></label>
+            <label><input type="radio" name="dillDist" value="10K"><span>10K</span></label>
+            <label><input type="radio" name="dillDist" value="Not sure"><span>Not sure yet</span></label>
+          </fieldset>
+          <label class="dill-field"><span>Name</span><input type="text" id="dillName" autocomplete="name" required></label>
+          <label class="dill-field"><span>Email</span><input type="email" id="dillEmail" autocomplete="email" required></label>
+          <p class="dill-err" id="dillErr" role="alert" style="display:none;"></p>
+          <button type="submit" class="dill-submit" id="dillSubmit">Count me in 🥒</button>
+        </form>
+        <div class="dill-done" id="dillDone" style="display:none;" aria-live="polite">
+          <div class="dill-done-big">You're on the list! 🥒</div>
+          <p>We'll email you as soon as registration opens.</p>
+        </div>
+        <a class="dill-ig" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Follow along on Instagram →</a>
       </div>
     </div>
   </section>
@@ -889,6 +926,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         rsvpSubmitBtn.textContent = 'Submit';
       }
     });
+
+    // Big Dill interest signup (reuses RSVP sheet endpoint)
+    (function(){
+      const f=document.getElementById('dillForm'); if(!f) return;
+      const err=document.getElementById('dillErr'), btn=document.getElementById('dillSubmit');
+      f.addEventListener('submit', async (e)=>{
+        e.preventDefault(); err.style.display='none';
+        const name=document.getElementById('dillName').value.trim();
+        const email=document.getElementById('dillEmail').value.trim();
+        const dist=(f.querySelector('input[name="dillDist"]:checked')||{}).value||'Not sure';
+        if(!name){err.textContent='Please add your name.';err.style.display='';return;}
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email.';err.style.display='';return;}
+        btn.disabled=true; btn.textContent='Saving…';
+        const label='Big Dill interest: '+dist;
+        try{
+          const r=await fetch(RSVP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({run:label,name,email})});
+          if(!r.ok) throw new Error('status '+r.status);
+          f.style.display='none'; document.getElementById('dillDone').style.display='';
+          trackEvent({event:'rsvp_submitted', run_name: label});
+        }catch(x){
+          console.warn('Big Dill signup failed:',x);
+          err.textContent='Something went wrong, please try again.'; err.style.display='';
+          btn.disabled=false; btn.textContent='Count me in 🥒';
+        }
+      });
+    })();
 
     loadRuns().then(runs => {
       renderSchedule(runs);
