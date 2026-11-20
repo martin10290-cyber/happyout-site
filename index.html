@@ -336,31 +336,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .dill-dist{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.2rem;margin-top:4px;}
   .dill-date{display:inline-flex;flex-direction:column;background:var(--pickle-deep);color:var(--white);border-radius:18px;padding:10px 22px;margin-top:16px;font-family:'Fredoka',sans-serif;line-height:1.1;}
   .dill-date span{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;}
+  .dill-date span+b+span{margin-top:3px;letter-spacing:.06em;}
   .dill-date b{font-size:1.6rem;font-weight:700;}
   .dill-copy{max-width:440px;margin:16px auto 0;font-weight:600;line-height:1.5;}
-  .dill-cta{display:inline-block;margin-top:16px;background:var(--white);color:var(--pickle-deep);font-family:'Fredoka',sans-serif;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:30px;box-shadow:0 5px 0 rgba(62,107,36,.35);transition:transform .15s ease;}
-  .dill-cta:hover{transform:translateY(-2px);}
-  .dill-form{max-width:420px;margin:20px auto 0;background:var(--white);border-radius:22px;padding:20px;box-shadow:0 6px 0 rgba(62,107,36,.25);text-align:left;}
-  .dill-dist-pick{border:0;padding:0;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:8px;}
-  .dill-dist-pick legend{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;margin-bottom:8px;color:var(--pickle-deep);}
-  .dill-dist-pick label{cursor:pointer;}
-  .dill-dist-pick input{position:absolute;opacity:0;pointer-events:none;}
-  .dill-dist-pick span{display:inline-block;padding:9px 16px;border-radius:24px;border:2px solid var(--pickle-deep);font-family:'Fredoka',sans-serif;font-weight:600;color:var(--pickle-deep);background:var(--white);transition:background .15s ease;}
-  .dill-dist-pick input:checked+span{background:var(--pickle-deep);color:var(--white);}
-  .dill-dist-pick input:focus-visible+span{outline:3px solid var(--coral-btn);outline-offset:2px;}
-  .dill-field{display:block;margin-bottom:12px;}
-  .dill-field span{display:block;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--pickle-deep);margin-bottom:5px;}
-  .dill-field input{width:100%;box-sizing:border-box;padding:12px 14px;border:2px solid #d9e9c4;border-radius:14px;font-size:1rem;font-family:inherit;color:var(--ink);}
-  .dill-field input:focus{outline:none;border-color:var(--pickle-deep);}
-  .dill-err{color:var(--coral-btn);font-weight:700;margin:0 0 10px;font-size:.92rem;}
-  .dill-submit{width:100%;background:var(--pickle-deep);color:var(--white);border:0;border-radius:30px;padding:14px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.08rem;cursor:pointer;box-shadow:0 5px 0 #2a4a18;transition:transform .1s ease,box-shadow .1s ease;}
-  .dill-submit:hover{transform:translateY(-1px);}
-  .dill-submit:active{transform:translateY(3px);box-shadow:0 2px 0 #2a4a18;}
-  .dill-submit:disabled{opacity:.7;cursor:default;}
-  .dill-done{max-width:420px;margin:20px auto 0;background:var(--white);border-radius:22px;padding:22px;box-shadow:0 6px 0 rgba(62,107,36,.25);}
-  .dill-done-big{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;}
-  .dill-done p{margin:6px 0 0;font-weight:600;}
-  .dill-ig{display:inline-block;margin-top:16px;color:var(--pickle-deep);font-weight:700;text-decoration:underline;}
+  .dill-reg{margin-top:22px;}
+  .dill-register{display:inline-flex;align-items:center;gap:10px;background:var(--pickle-deep);color:var(--white);font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.25rem;text-decoration:none;padding:16px 34px;border-radius:40px;box-shadow:0 6px 0 #2a4a18;transition:transform .12s ease,box-shadow .12s ease;}
+  .dill-register:hover{transform:translateY(-2px);box-shadow:0 8px 0 #2a4a18;}
+  .dill-register:active{transform:translateY(4px);box-shadow:0 2px 0 #2a4a18;}
+  .dill-register.closed{background:#7b8f6d;box-shadow:none;pointer-events:none;cursor:default;}
+  .dill-reg-note{margin-top:12px;font-weight:700;font-size:.92rem;}
+  .dill-card{max-width:480px;margin:22px auto 0;background:var(--white);border-radius:22px;padding:20px 22px;box-shadow:0 6px 0 rgba(62,107,36,.25);text-align:left;color:var(--ink);}
+  .dill-card h3{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.2rem;color:var(--pickle-deep);margin-bottom:10px;}
+  .dill-facts div{display:flex;gap:12px;padding:8px 0;border-top:1px solid #e6f0d9;}
+  .dill-facts div:first-child{border-top:0;padding-top:0;}
+  .dill-facts dt{flex:0 0 62px;font-family:'Fredoka',sans-serif;font-weight:600;color:var(--pickle-deep);}
+  .dill-facts dd{font-weight:600;line-height:1.45;}
+  .dill-facts a{color:var(--pickle-deep);font-weight:700;}
+  .dill-list{list-style:none;}
+  .dill-list li{display:flex;gap:10px;padding:6px 0;font-weight:600;line-height:1.4;}
+  .dill-flyer{display:block;max-width:420px;width:100%;height:auto;margin:22px auto 0;border-radius:20px;box-shadow:0 6px 0 rgba(62,107,36,.25);}
+  .dill-sponsors{margin-top:26px;}
+  .dill-sponsor-label{display:block;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;}
+  .dill-sponsor-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 20px;margin-top:12px;}
+  .dill-sponsor{display:inline-flex;align-items:center;background:var(--white);border-radius:16px;padding:10px 18px;font-family:'Fredoka',sans-serif;font-weight:600;color:var(--ink);}
+  .dill-sponsor img{display:block;height:44px;width:auto;}
   /* FAQ */
   .faq{display:flex;flex-direction:column;gap:12px;}
   .faq details{background:var(--white);border-radius:22px;box-shadow:0 6px 0 rgba(185,184,240,.4);overflow:hidden;}
@@ -396,7 +395,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
   <a class="skip" href="#schedule">Skip to schedule</a>
-  <div class="topbar" id="topbar"><a href="#bigdill">🥒 You're a Big Dill 5K/10K, Sun Dec 13. Details soon!</a></div>
+  <div class="topbar" id="topbar"><a href="#bigdill">🥒 Big Dill 5K/10K registration is open. Sun Dec 13</a></div>
   <nav class="nav" aria-label="Sections">
     <a href="#schedule">Schedule</a>
     <a href="#findus">Find Us</a>
@@ -429,30 +428,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <section class="block panel-pickle" id="bigdill">
     <div class="wrap">
       <div class="dill">
-        <div class="dill-eyebrow">Save the date</div>
+        <div class="dill-eyebrow" id="dillStatus">Registration open</div>
         <div class="dill-pickle" aria-hidden="true">🥒</div>
         <h2 class="dill-title">You're a Big Dill</h2>
-        <div class="dill-dist">5K + 10K</div>
-        <div class="dill-date"><span>Sun</span><b>Dec 13</b></div>
-        <p class="dill-copy">A pickle-powered race day is coming to Long Beach. Want in? Drop your info and we'll send you the details and registration link first.</p>
-        <form class="dill-form" id="dillForm" novalidate>
-          <fieldset class="dill-dist-pick">
-            <legend>Which distance?</legend>
-            <label><input type="radio" name="dillDist" value="5K" checked><span>5K</span></label>
-            <label><input type="radio" name="dillDist" value="10K"><span>10K</span></label>
-            <label><input type="radio" name="dillDist" value="Not sure"><span>Not sure yet</span></label>
-          </fieldset>
-          <label class="dill-field"><span>Name</span><input type="text" id="dillName" autocomplete="name" required></label>
-          <label class="dill-field"><span>Email</span><input type="email" id="dillEmail" autocomplete="email" autocapitalize="off" required></label>
-          <input type="text" class="hp" id="dillWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <p class="dill-err" id="dillErr" role="alert" style="display:none;"></p>
-          <button type="submit" class="dill-submit" id="dillSubmit">Count me in 🥒</button>
-        </form>
-        <div class="dill-done" id="dillDone" style="display:none;" aria-live="polite">
-          <div class="dill-done-big">You're on the list! 🥒</div>
-          <p>We'll email you as soon as registration opens.</p>
+        <div class="dill-dist">5K + 10K, out-and-back on the beach path</div>
+        <div class="dill-date"><span>Sun</span><b>Dec 13</b><span>8:30 AM start</span></div>
+
+        <div class="dill-reg">
+          <a class="dill-register" id="dillRegister" href="https://happyoutrunclub.myshopify.com/products/youre-a-big-dill-5k-10k-registration-sun-dec-13" target="_blank" rel="noopener" data-link-name="bigdill_register">Register &amp; pay, $40 <span aria-hidden="true">→</span></a>
+          <p class="dill-reg-note" id="dillRegNote">Registration closes Fri, Dec 4. No refunds.</p>
         </div>
-        <a class="dill-ig" href="https://www.instagram.com/happyoutrunclub/" target="_blank" rel="noopener">Follow along on Instagram →</a>
+
+        <div class="dill-card">
+          <h3>Race day</h3>
+          <dl class="dill-facts">
+            <div><dt>When</dt><dd>Sunday, Dec 13. Check-in 8:00 AM, start 8:30 AM.</dd></div>
+            <div><dt>Where</dt><dd><a href="https://www.google.com/maps/search/?api=1&query=Granada+Launch+Ramp+Long+Beach+CA" target="_blank" rel="noopener">Granada Launch Ramp, Long Beach</a>. Start at Granada &amp; Ocean.</dd></div>
+            <div><dt>Course</dt><dd>Out-and-back on the beach path. Pick the 5K or 10K. Self-timed.</dd></div>
+            <div><dt>Cost</dt><dd>$40. No refunds. Registration closes Fri, Dec 4.</dd></div>
+          </dl>
+        </div>
+
+        <div class="dill-card">
+          <h3>What you get</h3>
+          <ul class="dill-list">
+            <li><span aria-hidden="true">🧢</span> A custom Big Dill hat</li>
+            <li><span aria-hidden="true">👜</span> A tote</li>
+            <li><span aria-hidden="true">🥒</span> Pickles from Kaylin + Kaylin</li>
+            <li><span aria-hidden="true">🏆</span> lululemon prizes for the 1st place 5K and 10K finishers, plus fun superlatives</li>
+          </ul>
+        </div>
+
+        <div class="dill-sponsors" aria-label="Sponsors">
+          <span class="dill-sponsor-label">Thanks to our partners</span>
+          <div class="dill-sponsor-row">
+            <span class="dill-sponsor">Kaylin + Kaylin Pickles</span>
+            <span class="dill-sponsor">Powered by lululemon</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1127,57 +1140,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
 
-    // Big Dill interest signup (saved to the same sheet as RSVPs)
+    // Big Dill: registration closes at the end of Fri, Dec 4 (Pacific)
     (function () {
-      const form = document.getElementById('dillForm');
-      if (!form) return;
-      const err = document.getElementById('dillErr');
-      const btn = document.getElementById('dillSubmit');
-      const done = document.getElementById('dillDone');
-      const nameInput = document.getElementById('dillName');
-      const emailInput = document.getElementById('dillEmail');
-      const honeypot = document.getElementById('dillWebsite');
-
-      function showDone() { form.style.display = 'none'; done.style.display = ''; }
-
-      if (store.get('ho_dill')) showDone();
-      const me = store.get('ho_me') || {};
-      if (me.name) nameInput.value = me.name;
-      if (me.email) emailInput.value = me.email;
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        err.style.display = 'none';
-        if (honeypot.value) { showDone(); return; }
-
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const dist = (form.querySelector('input[name="dillDist"]:checked') || {}).value || 'Not sure';
-        if (!name) { err.textContent = 'Please add your name.'; err.style.display = ''; nameInput.focus(); return; }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Please enter a valid email.'; err.style.display = ''; emailInput.focus(); return; }
-
-        btn.disabled = true;
-        btn.textContent = 'Saving…';
-        const label = 'Big Dill interest: ' + dist;
-        try {
-          const response = await fetch(RSVP_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ run: label, name, email }),
-          });
-          if (!response.ok) throw new Error('status ' + response.status);
-          store.set('ho_me', { name, email });
-          store.set('ho_dill', true);
-          showDone();
-          trackEvent({ event: 'rsvp_submitted', run_name: label });
-        } catch (x) {
-          console.warn('Big Dill signup failed:', x);
-          err.textContent = 'Something went wrong, please try again.';
-          err.style.display = '';
-          btn.disabled = false;
-          btn.textContent = 'Count me in 🥒';
-        }
-      });
+      const btn = document.getElementById('dillRegister');
+      if (!btn) return;
+      if (Date.now() >= new Date('2026-12-05T00:00:00-08:00').getTime()) {
+        btn.classList.add('closed');
+        btn.removeAttribute('href');
+        btn.setAttribute('aria-disabled', 'true');
+        btn.textContent = 'Registration closed';
+        document.getElementById('dillStatus').textContent = 'See you Dec 13';
+        document.getElementById('dillRegNote').textContent = 'Already registered? See you at check-in, 8:00 AM.';
+      }
     })();
 
     // Photos
